@@ -17,25 +17,21 @@ int fuzzme(char *buf)
 
 #define BUFSZ 256
 
-int main(int argc, char** argv)
+int LLVMFuzzerTestOneInput(char* data, size_t size)
 {
-    char buf[BUFSZ] = { 0 };
+    size_t bufsz = size < BUFSZ ? size : BUFSZ;
+    data[bufsz] = 0 ;
     FILE* f = NULL;
     size_t nr = 0;
 
-    if (2 > argc) {
-        fprintf(stderr, "usage: %s PAYLOAD\n", argv[0]);
-        return 1;
-    }
-
-    f = fopen(argv[1], "rb");
+    f = fopen(data, "rb");
     assert(f);
 
-    nr = fread(buf, sizeof(buf[0]), BUFSZ, f);
+    nr = fread(data, sizeof(data[0]), bufsz, f);
     assert(nr > 0);
-    buf[BUFSZ-1] = '\0';
+    data[bufsz-1] = '\0';
 
-    fuzzme(buf);
+    fuzzme(data);
 
     fclose(f);
 
