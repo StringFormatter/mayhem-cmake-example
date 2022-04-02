@@ -19,22 +19,7 @@ int fuzzme(char *buf)
 
 int LLVMFuzzerTestOneInput(char* data, size_t size)
 {
-    size_t bufsz = size < BUFSZ ? size : BUFSZ;
-    data[bufsz] = 0 ;
-    FILE* f = NULL;
-    size_t nr = 0;
-
-    f = fopen(data, "rb");
-    assert(f);
-
-    nr = fread(data, sizeof(data[0]), bufsz, f);
-    assert(nr > 0);
-    data[bufsz-1] = '\0';
-
     fuzzme(data);
-
-    fclose(f);
-
     return 0;
 }
 
